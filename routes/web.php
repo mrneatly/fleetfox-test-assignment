@@ -10,7 +10,9 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
+    // As the dashboard is kinda useless, we'll just redirect to the tasks index for now
+    return redirect()->route('tasks.index');
+    //return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {

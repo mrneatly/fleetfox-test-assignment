@@ -11,28 +11,22 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
-import { index } from '@/actions/App/Http/Controllers/TaskCategoryController';
 import { index as tasksIndex } from '@/actions/App/Http/Controllers/TaskController';
+import { index as categoryIndex } from '@/actions/App/Http/Controllers/TaskCategoryController';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { Folder, LayoutGrid, CheckSquare } from 'lucide-vue-next';
+import { Folder, CheckSquare } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
     {
         title: 'Tasks',
         href: tasksIndex(),
         icon: CheckSquare,
     },
     {
-        title: 'Task categories',
-        href: index(),
+        title: 'Categories',
+        href: categoryIndex(),
         icon: Folder,
     },
 ];
@@ -53,7 +47,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                        <Link :href="tasksIndex()">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>

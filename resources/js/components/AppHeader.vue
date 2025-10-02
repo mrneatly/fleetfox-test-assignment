@@ -31,10 +31,11 @@ import {
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl, urlIsActive } from '@/lib/utils';
-import { dashboard } from '@/routes';
+import { index as tasksIndex } from '@/actions/App/Http/Controllers/TaskController';
+import { index as categoryIndex } from '@/actions/App/Http/Controllers/TaskCategoryController';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { Folder, CheckSquare, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -62,23 +63,24 @@ const activeItemStyles = computed(
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
+        title: 'Tasks',
+        href: tasksIndex(),
+        icon: CheckSquare,
+    },
+    {
+        title: 'Categories',
+        href: categoryIndex(),
+        icon: Folder,
     },
 ];
 
 const rightNavItems: NavItem[] = [
-    {
+    // Footer nav items are not needed, but this one is included for reference
+    /*{
         title: 'Repository',
         href: 'https://github.com/laravel/vue-starter-kit',
         icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
+    },*/
 ];
 </script>
 
@@ -148,7 +150,7 @@ const rightNavItems: NavItem[] = [
                     </Sheet>
                 </div>
 
-                <Link :href="dashboard()" class="flex items-center gap-x-2">
+                <Link :href="tasksIndex()" class="flex items-center gap-x-2">
                     <AppLogo />
                 </Link>
 
