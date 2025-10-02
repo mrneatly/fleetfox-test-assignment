@@ -12,7 +12,7 @@ use Illuminate\Validation\Rules\Enum as EnumRule;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class TaskCategoryController extends Controller
+class TaskCategoryController
 {
     public function index(Request $request): Response
     {

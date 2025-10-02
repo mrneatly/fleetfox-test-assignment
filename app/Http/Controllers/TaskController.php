@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class TaskController extends Controller
+class TaskController
 {
     public function index(Request $request): Response
     {
