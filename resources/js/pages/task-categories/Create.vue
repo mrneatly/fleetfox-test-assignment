@@ -7,11 +7,27 @@ import { Label } from '@/components/ui/label';
 import InputError from '@/components/InputError.vue';
 import { type BreadcrumbItem } from '@/types';
 import { index, create, store } from '@/actions/App/Http/Controllers/TaskCategoryController';
+import { watch } from 'vue';
 
 const form = useForm({
   name: '',
   slug: '',
   icon_name: '' as string | null,
+});
+
+function slugify(input: string) {
+  // Mimic Laravel's Str::slug() helper
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9\-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+watch(() => form.name, (val) => {
+  form.slug = slugify(val || '');
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -37,7 +53,7 @@ function submit() {
 
         <div class="grid gap-2">
           <Label for="slug">Slug</Label>
-          <Input id="slug" v-model="form.slug" required placeholder="maintenance" />
+          <Input id="slug" v-model="form.slug" required placeholder="maintenance" disabled readonly />
           <InputError class="mt-2" :message="form.errors.slug" />
         </div>
 

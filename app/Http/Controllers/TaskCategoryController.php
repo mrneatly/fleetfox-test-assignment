@@ -6,6 +6,7 @@ use App\Models\TaskCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -38,6 +39,11 @@ class TaskCategoryController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        // Always derive slug from the provided name to prevent manual input
+        $request->merge([
+            'slug' => Str::slug((string) $request->string('name')),
+        ]);
+
         $validated = $request->validate([
             'slug' => ['required', 'string', 'max:255', 'unique:task_categories,slug'],
             'name' => ['required', 'string', 'max:255'],
@@ -59,6 +65,11 @@ class TaskCategoryController extends Controller
 
     public function update(Request $request, TaskCategory $taskCategory): RedirectResponse
     {
+        // Regenerate slug from name and keep it unique except current record
+        $request->merge([
+            'slug' => Str::slug((string) $request->string('name')),
+        ]);
+
         $validated = $request->validate([
             'slug' => ['required', 'string', 'max:255', 'unique:task_categories,slug,' . $taskCategory->id],
             'name' => ['required', 'string', 'max:255'],

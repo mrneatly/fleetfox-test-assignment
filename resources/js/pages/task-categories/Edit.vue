@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import InputError from '@/components/InputError.vue';
 import { type BreadcrumbItem } from '@/types';
 import { index, edit, update, destroy } from '@/actions/App/Http/Controllers/TaskCategoryController';
+import { watch } from 'vue';
 
 interface Category {
   id: number
@@ -21,6 +22,21 @@ const form = useForm({
   name: props.category.name,
   slug: props.category.slug,
   icon_name: props.category.icon_name ?? '' as string | null,
+});
+
+function slugify(input: string) {
+  // Mimic Laravel's Str::slug() helper
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9\-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+watch(() => form.name, (val) => {
+  form.slug = slugify(val || '');
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -51,7 +67,7 @@ function destroyCategory() {
 
         <div class="grid gap-2">
           <Label for="slug">Slug</Label>
-          <Input id="slug" v-model="form.slug" required />
+          <Input id="slug" v-model="form.slug" required disabled readonly />
           <InputError class="mt-2" :message="form.errors.slug" />
         </div>
 
