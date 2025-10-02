@@ -26,16 +26,12 @@ const mainNavItems: NavItem[] = [
 ];
 
 const footerNavItems: NavItem[] = [
-    {
+    // Footer nav items are not needed, but this one is included for reference
+    /*{
         title: 'Github Repo',
         href: 'https://github.com/laravel/vue-starter-kit',
         icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
+    },*/
 ];
 </script>
 
