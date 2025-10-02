@@ -64,7 +64,7 @@ function destroyCategory(id: number) {
 <template>
   <Head title="Task categories" />
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="flex items-center justify-between gap-2 p-4">
+    <div class="flex items-end justify-between gap-2 p-4">
       <div class="grid gap-2 w-full max-w-sm">
         <Label for="search">Search</Label>
         <Input id="search" name="search" :default-value="filters.search" placeholder="Search by name" @input="onSearch" />
