@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type BreadcrumbItem } from '@/types';
-import { index, create, edit, destroy } from '@/actions/App/Http/Controllers/TaskController';
+import { index, create, edit, destroy, setDone } from '@/actions/App/Http/Controllers/TaskController';
 import { AlertTriangle, CheckCircle, CalendarDays, Tag, Pencil, Trash2, Check, Undo2 } from 'lucide-vue-next';
 import { ref } from 'vue';
 
@@ -68,6 +68,13 @@ function toggleExpand(id: number) {
   expanded.value[id] = !expanded.value[id];
 }
 
+function isDone(t: TaskItem) {
+  if (!t.done_at) return false;
+  const done = new Date(t.done_at).getTime();
+  const now = Date.now();
+  return done <= now; // done in the past
+}
+
 function isDueSoon(t: TaskItem) {
   if (!t.due_date) return false;
   const due = new Date(t.due_date).getTime();
@@ -77,8 +84,17 @@ function isDueSoon(t: TaskItem) {
 }
 
 function cardClasses(t: TaskItem) {
+  if (isDone(t)) return 'bg-green-50 border-green-200';
   if (isDueSoon(t)) return 'bg-yellow-50 border-yellow-200';
   return 'bg-background';
+}
+
+function toggleDone(t: TaskItem) {
+  router.patch(
+    setDone.url(t.id, { mergeQuery: {} }),
+    {},
+    { preserveScroll: true, preserveState: true, replace: true }
+  );
 }
 </script>
 
@@ -126,7 +142,8 @@ function cardClasses(t: TaskItem) {
         >
           <div class="flex items-start gap-3">
             <div class="pt-1">
-              <AlertTriangle v-if="isDueSoon(t)" class="text-yellow-600" :size="20" />
+              <CheckCircle v-if="isDone(t)" class="text-green-600" :size="20" />
+              <AlertTriangle v-else-if="isDueSoon(t)" class="text-yellow-600" :size="20" />
             </div>
             <div class="flex-1">
               <div class="flex items-center gap-2">
@@ -156,6 +173,10 @@ function cardClasses(t: TaskItem) {
               </div>
             </div>
             <div class="ml-auto flex items-start gap-2">
+              <Button variant="outline" size="icon" class="h-8 w-8" @click="toggleDone(t)" :title="isDone(t) ? 'Mark as undone' : 'Mark as done'">
+                <Undo2 v-if="isDone(t)" :size="16" />
+                <Check v-else :size="16" />
+              </Button>
               <Link :href="edit.url(t.id)" as="button">
                 <Button variant="secondary" size="icon" class="h-8 w-8" title="Edit">
                   <Pencil :size="16" />

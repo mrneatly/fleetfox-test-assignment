@@ -20,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Tasks CRUD
     Route::resource('tasks', TaskController::class)->except('show');
+    Route::patch('tasks/{task}/done', [TaskController::class, 'setDone'])->name('tasks.done');
 });
 
 require __DIR__.'/settings.php';

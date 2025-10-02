@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -63,10 +64,12 @@ class TaskController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'text' => ['nullable', 'string'],
             'due_date' => ['nullable', 'date'],
-            'done_at' => ['nullable', 'date'],
         ]);
 
-        Task::create($validated);
+        $task = new Task($validated);
+        // done_at is not set on create via form; ensure null by default
+        $task->done_at = null;
+        $task->save();
 
         return redirect()->route('tasks.index')
             ->with('success', 'Task created.');
@@ -89,10 +92,16 @@ class TaskController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'text' => ['nullable', 'string'],
             'due_date' => ['nullable', 'date'],
-            'done_at' => ['nullable', 'date'],
+            'done' => ['nullable', 'boolean'],
         ]);
 
-        $task->update($validated);
+        // Apply done flag to done_at
+        if ($request->has('done')) {
+            $task->done_at = $request->boolean('done') ? Carbon::now() : null;
+        }
+
+        $task->fill(collect($validated)->except('done')->toArray());
+        $task->save();
 
         return redirect()->route('tasks.index')
             ->with('success', 'Task updated.');
@@ -104,5 +113,17 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.index')
             ->with('success', 'Task deleted.');
+    }
+
+    public function setDone(Request $request, Task $task): RedirectResponse
+    {
+        $done = $request->has('done')
+            ? $request->boolean('done')
+            : $task->done_at === null;
+
+        $task->done_at = $done ? Carbon::now() : null;
+        $task->save();
+
+        return redirect()->back();
     }
 }
