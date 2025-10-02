@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TaskCategoryIcon;
 use App\Models\TaskCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Enum as EnumRule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,7 +49,7 @@ class TaskCategoryController extends Controller
         $validated = $request->validate([
             'slug' => ['required', 'string', 'max:255', 'unique:task_categories,slug'],
             'name' => ['required', 'string', 'max:255'],
-            'icon_name' => ['nullable', 'string', 'max:255'],
+            'icon_name' => ['nullable', 'string', 'max:255', new EnumRule(TaskCategoryIcon::class)],
         ]);
 
         TaskCategory::create($validated);
@@ -65,7 +67,7 @@ class TaskCategoryController extends Controller
 
     public function update(Request $request, TaskCategory $taskCategory): RedirectResponse
     {
-        // Regenerate slug from name and keep it unique except current record
+        // Regenerate slug from name to prevent manual input
         $request->merge([
             'slug' => Str::slug((string) $request->string('name')),
         ]);
@@ -73,7 +75,7 @@ class TaskCategoryController extends Controller
         $validated = $request->validate([
             'slug' => ['required', 'string', 'max:255', 'unique:task_categories,slug,' . $taskCategory->id],
             'name' => ['required', 'string', 'max:255'],
-            'icon_name' => ['nullable', 'string', 'max:255'],
+            'icon_name' => ['nullable', 'string', 'max:255', new EnumRule(TaskCategoryIcon::class)],
         ]);
 
         $taskCategory->update($validated);

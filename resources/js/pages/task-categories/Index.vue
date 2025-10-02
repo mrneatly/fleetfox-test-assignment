@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type BreadcrumbItem } from '@/types';
 import { index, create, edit, destroy } from '@/actions/App/Http/Controllers/TaskCategoryController';
+import { House, User, Settings, Bell, Star, Tag, Folder, Bookmark, Heart, LineChart } from 'lucide-vue-next';
 
 interface Category {
   id: number
@@ -31,6 +32,19 @@ interface Props {
 }
 
 defineProps<Props>();
+
+const iconMap = {
+  house: House,
+  user: User,
+  settings: Settings,
+  bell: Bell,
+  star: Star,
+  tag: Tag,
+  folder: Folder,
+  bookmark: Bookmark,
+  heart: Heart,
+  'chart-line': LineChart,
+} as const;
 
 const breadcrumbs: BreadcrumbItem[] = [
   { title: 'Task categories', href: index.url() },
@@ -77,7 +91,10 @@ function destroyCategory(id: number) {
             <tr v-for="cat in categories.data" :key="cat.id" class="border-t">
               <td class="px-4 py-3 font-medium">{{ cat.name }}</td>
               <td class="px-4 py-3">{{ cat.slug }}</td>
-              <td class="px-4 py-3">{{ cat.icon_name ?? '-' }}</td>
+              <td class="px-4 py-3">
+                <component v-if="cat.icon_name && iconMap[cat.icon_name as keyof typeof iconMap]" :is="iconMap[cat.icon_name as keyof typeof iconMap]" :size="18" class="text-muted-foreground" />
+                <span v-else>-</span>
+              </td>
               <td class="px-4 py-3 text-right space-x-2">
                 <Link :href="edit.url(cat.id)" as="button">
                   <Button variant="secondary" size="sm">Edit</Button>

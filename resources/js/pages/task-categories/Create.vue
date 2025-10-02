@@ -12,7 +12,7 @@ import { watch } from 'vue';
 const form = useForm({
   name: '',
   slug: '',
-  icon_name: '' as string | null,
+  icon_name: null as string | null,
 });
 
 function slugify(input: string) {
@@ -58,8 +58,24 @@ function submit() {
         </div>
 
         <div class="grid gap-2">
-          <Label for="icon_name">Icon name</Label>
-          <Input id="icon_name" v-model="form.icon_name" placeholder="optional icon name" />
+          <Label for="icon_name">Icon</Label>
+          <select
+            id="icon_name"
+            v-model="form.icon_name"
+            class="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option :value="null">No icon</option>
+            <option value="house">house</option>
+            <option value="user">user</option>
+            <option value="settings">settings</option>
+            <option value="bell">bell</option>
+            <option value="star">star</option>
+            <option value="tag">tag</option>
+            <option value="folder">folder</option>
+            <option value="bookmark">bookmark</option>
+            <option value="heart">heart</option>
+            <option value="chart-line">chart-line</option>
+          </select>
           <InputError class="mt-2" :message="form.errors.icon_name" />
         </div>
 
