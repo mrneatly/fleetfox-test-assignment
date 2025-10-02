@@ -7,6 +7,7 @@ use App\Models\TaskCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -48,22 +49,53 @@ class TaskController extends Controller
 
     public function create(): Response
     {
+        $categories = TaskCategory::orderBy('name')->get(['id', 'name']);
 
+        return Inertia::render('tasks/Create', [
+            'categories' => $categories,
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'category_id' => ['nullable', 'integer', Rule::exists('task_categories', 'id')],
+            'title' => ['required', 'string', 'max:255'],
+            'text' => ['nullable', 'string'],
+            'due_date' => ['nullable', 'date'],
+            'done_at' => ['nullable', 'date'],
+        ]);
 
+        Task::create($validated);
+
+        return redirect()->route('tasks.index')
+            ->with('success', 'Task created.');
     }
 
     public function edit(Task $task): Response
     {
+        $categories = TaskCategory::orderBy('name')->get(['id', 'name']);
 
+        return Inertia::render('tasks/Edit', [
+            'task' => $task,
+            'categories' => $categories,
+        ]);
     }
 
     public function update(Request $request, Task $task): RedirectResponse
     {
+        $validated = $request->validate([
+            'category_id' => ['nullable', 'integer', Rule::exists('task_categories', 'id')],
+            'title' => ['required', 'string', 'max:255'],
+            'text' => ['nullable', 'string'],
+            'due_date' => ['nullable', 'date'],
+            'done_at' => ['nullable', 'date'],
+        ]);
 
+        $task->update($validated);
+
+        return redirect()->route('tasks.index')
+            ->with('success', 'Task updated.');
     }
 
     public function destroy(Task $task): RedirectResponse
