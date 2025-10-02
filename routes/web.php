@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\TaskCategoryController;
@@ -16,6 +17,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('task-categories', TaskCategoryController::class)->parameters([
         'task-categories' => 'taskCategory',
     ]);
+
+    // Tasks CRUD
+    Route::resource('tasks', TaskController::class)->except('show');
 });
 
 require __DIR__.'/settings.php';

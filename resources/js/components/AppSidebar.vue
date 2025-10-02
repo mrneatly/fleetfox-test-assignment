@@ -13,9 +13,10 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { index } from '@/actions/App/Http/Controllers/TaskCategoryController';
+import { index as tasksIndex } from '@/actions/App/Http/Controllers/TaskController';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { Folder, LayoutGrid } from 'lucide-vue-next';
+import { Folder, LayoutGrid, CheckSquare } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -23,6 +24,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Tasks',
+        href: tasksIndex(),
+        icon: CheckSquare,
     },
     {
         title: 'Task categories',
