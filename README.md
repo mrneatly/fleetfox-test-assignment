@@ -61,3 +61,13 @@ docker-compose exec app ./vendor/bin/pest
 # Run specific test file
 docker-compose exec app ./vendor/bin/pest tests/Feature/TaskControllerTest.php
 ```
+
+## Potential Improvements
+- Improve design responsiveness in search forms
+- Add debouncing to search input on task/category index pages
+- There is a small chance category slug may exceed 255 characters, which will cause an error when creating a new task. Handle this gracefully
+- Implement toast notifications for success/error messages instead of session flashes
+- Implement task sorting options (by due date, priority, created date)
+- Add email notifications for upcoming due dates
+- Add data export functionality (CSV, PDF)
+- Implement soft deletes for tasks and categories with restore functionality
