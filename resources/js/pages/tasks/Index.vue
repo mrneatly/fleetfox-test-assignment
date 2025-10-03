@@ -84,8 +84,8 @@ function isDueSoon(t: TaskItem) {
 }
 
 function cardClasses(t: TaskItem) {
-  if (isDone(t)) return 'bg-green-50 border-green-200';
-  if (isDueSoon(t)) return 'bg-yellow-50 border-yellow-200';
+  if (isDone(t)) return 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800';
+  if (isDueSoon(t)) return 'bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800';
   return 'bg-background';
 }
 
